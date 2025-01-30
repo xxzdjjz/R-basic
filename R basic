@@ -3,7 +3,7 @@ rc = dbConnect(odbc::odbc(), .connection_string = rs_getcstring_okta())
 tbl(rc, in_schema("datafolder", "dataset")
     
 # count number of observations
-nrows(df)
+nrow(df)
 
 # get data maximum/minimum
 summarise(var=min(var), na.rm=TRUE) #na.rm=TRUE meaning, exclude missing
