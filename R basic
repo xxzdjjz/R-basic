@@ -5,5 +5,51 @@ tbl(rc, in_schema("datafolder", "dataset")
 # count number of observations
 nrow(df)
 
-# get data maximum/minimum
+# get data maximum/minimum/distinct
 summarise(var=min(var), na.rm=TRUE) #na.rm=TRUE meaning, exclude missing
+summarise(n_dates=n_distinct(fst_dt))
+
+# date format
+as.Date("2018-10-06")
+
+# sql select, where (filter), group by
+dateset %>% select(ptid, diag, fst_dt) %>%
+filter(icd_flag=="10") %>% # double quoting for char
+filter(substr(diag, 1, 3)="E11" %>%
+group_by(ptid) %>%
+    filter(n_dates>=2, fst_dt_diff>=30) %>% # use , for multiple filters
+ungroup() %>% # restore to the original order
+collect() %>% # need add this for statement extract data from database platform
+as.data.table() # for table structure
+
+# get distinct ptid/variable
+dataset %>% distinct(variable_nm)
+
+# create new column, mutate()
+mutate(gnrc_nm=upper(gnrc_nm), # if same variable name, the original one in the dataset will be replaced.
+       AGI = case_when(gnrc_nm %~% !!(str_agi) ~ TRUE, TRUE ~ FALSE)
+       # , for multiple variables.
+       # %~% character comparison in tidy.
+       # !! unquote str_agi for comparison.
+       # ~ TRUE: if condition met, variable AGI=TRUE, else AGI=FALSE)
+
+# case_when() vs ifelse()
+AGI = case_when(gnrc_nm %~% !!(str_agi) ~ TRUE, TRUE ~ FALSE # AGI=TRUE if met, =FALSE if not.
+drug= ifelse(gnrc_nm %~% !!(str_agi), "DPP4/", "") # drug=DPP4/ if met, ="" if not.
+
+# concatenate characters, paste()
+concatenated_with_delimiter=catx('delimiter', var1, "text");
+paste0(!!var1, "text", collapse="delimiter")
+concatenated_without_delimiter=cat(var1, "text");
+concatenated_without_delimiter=cat(var1, "text");
+paste0(!!var1, "text")
+
+# remove the trailing slush /
+drug = sql("TRIM(TRAILING '/' from drug)") # sql(): directly execute in R.
+drug = RTRIM(drug, '/')
+df$drug <- gsub("/", "", df$drug)
+
+# get part of character as a new variable
+sql("SPLIT_PART(variable, 'delimiter', 1)")
+scan(variable, n, 'delimiter')
+
