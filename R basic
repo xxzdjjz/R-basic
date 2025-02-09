@@ -24,6 +24,7 @@ as.data.table() # for table structure
 
 # get distinct ptid/variable
 dataset %>% distinct(variable_nm)
+distinct(dataset, variable_nm)
 # Note that do not use filter(dataset$distinct(ptid), need to join tables
 
 # create new column, mutate()
