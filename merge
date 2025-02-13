@@ -31,8 +31,16 @@ result <- data_a %>%
   inner_join(data_b, by="ptid") %>%
   inner_join(data_c, by=c("ptid, "visit") %>%
   left_join(data_d, by="visit")
-2) reduce()
+2) reduce(): join in order, need all data in the list share the same "by="
 library(purrr)
 data_list <- list(data_a, data_b, data_C, data_d)
 result=reduce(data_list, JOIN_FUNCTION, by="ptid")
-
+* if dataset d has another merge variable:
+result <- reduce(list(data_a, data_b, data_c %>% select(ptid, col_c), inner_join, by="ptid") %>%
+inner_join(data_d, by="col_c")
+3) use sql language
+library(sqldf)
+result <- sqldf("select a.*, b.var1, c.var2, d.var3
+                 from data_a as a inner join data_b on a.ptid=b.ptid
+                                  inner join data_c on a.ptid=c.ptid
+                                  inner join data_d on c.visit=d.visit")
