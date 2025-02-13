@@ -1,0 +1,38 @@
+# Join functions
+inner_join(): a and b
+left_join(): a
+right_join(): b
+full_join(): a or b, impute NA for missing
+anti_join(): filter data in data_a but not in data_b
+semi_join(): filter data in data_a and in data_b, but not merge any columns from b into a
+
+# select() location and purpose:
+# variables before join: improve efficiency; after join: final variables you want
+result <- data_a %>%
+  select(var1, var2, ...) %>% # variables in data_a
+  JOIN_FUNCTION(data_b %>%
+             select(var1, var2, ...), by="ptid") %>% # variables in data_b
+  filter/mutate...
+  select(var1, var2, var3, ...) # final variable want to keep
+
+# codes can be omit
+select() if include all
+by= if both share a same variable name
+
+# by=
+can be omit if same column name
+have to add "". e.g., by="ptid"
+use c() for multiple merge column, separated by ",". e.g., by=c("ptid", "visit")
+use c("a_col"="b_col") when column are different but will use for merge. e.g., by=c("index_drug"="classdesc")
+                       variable besides "=" have to corresponding with the merge order
+# join multiple datasets
+1) join in order, need to have variable used for merge in the main data before join.
+result <- data_a %>%
+  inner_join(data_b, by="ptid") %>%
+  inner_join(data_c, by=c("ptid, "visit") %>%
+  left_join(data_d, by="visit")
+2) reduce()
+library(purrr)
+data_list <- list(data_a, data_b, data_C, data_d)
+result=reduce(data_list, JOIN_FUNCTION, by="ptid")
+
