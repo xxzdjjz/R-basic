@@ -1,0 +1,28 @@
+#### SAS
+proc summary data=ds nway;
+  class groupvar;
+  var variable;
+  output out=result n=n mean=mean sum=sum max=max min=min;
+run;
+
+#### R:dplyr
+library(dplyr)
+result <- ds %>%
+  group_by(groupvar) %>%
+  summarise(
+    n=n()，
+    mean=mean(variable, na.rm=TRUE),
+    sum=sum(variable, na.rm=TRUE),
+    max=max(variable, na.rm=TRUE),
+    min=min(variable, na.rm=TRUE))
+
+#### R:data.table, better performance on large datasets
+library(data.table)
+dt <- as.data.table(ds)
+result <- dt[, .(
+  n=.N,
+  mean=mean(variable, na.rm=TRUE),
+  sum=sum(variable, na.rm=TRUE),
+  max=max(variable, na.rm=TRUE),
+  min=min(variable, na.rm=TRUE)),
+by=groupvar]
