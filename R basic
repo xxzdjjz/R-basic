@@ -41,7 +41,8 @@ drug= ifelse(gnrc_nm %~% !!(str_agi), "DPP4/", "") # drug=DPP4/ if met, ="" if n
 
 # concatenate characters, paste()
 concatenated_with_delimiter=catx('delimiter', var1, "text");
-paste0(!!var1, "text", collapse="delimiter")
+paste0(!!var1, "text", collapse="delimiter"): remove the collapse
+paste(c("DPP4/MET", "GLP1", collapse='/'): add the collapse\
 concatenated_without_delimiter=cat(var1, "text");
 concatenated_without_delimiter=cat(var1, "text");
 paste0(!!var1, "text")
