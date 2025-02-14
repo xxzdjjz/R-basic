@@ -1,0 +1,63 @@
+#### SAS: if()/then()/else()
+data ds;
+  set ds_in;
+  if condition then flag=1; else flag=0;
+run;
+
+#### SQL: case when()
+# 1) select
+proc sql;
+  create table ds as
+  select case when condition then 1 else 0 end as flag,
+  from ds_in;
+quit;
+# 2) where
+proc sql;
+  create table ds as
+  select
+  from
+  where case when condition then flag=1 else 0 end;
+quit;
+# 3) order by: for sorting
+proc sql;
+  select
+  from
+  order by case when condition then 1 else 2 end;
+quit;    
+
+#### R: case_when()
+ds <- ds_in %>%
+  mutate(age_group=case_when(age<18 ~ "Minor",
+                             18<=age & age<25 ~ "Young Adult",
+                             age>=25 ~ "Adult"))
+  
+# case_when()         vs        if_else()
+case_when: multiple conditions; if_else for 1 condition TRUE/FALSE
+
+#### R: if_else/ifelse
+ds <- ds_in %>%
+  mutate(flag = if_else(condition, then, else),
+  mutate(flag2 = ifelse(condition, then, else)
+
+# ifelse() vs if_else()
+Feature                  ifelse()                                    if_else()
+Data type consistancy    automatically convert                       strict type consistency
+NA Handling              automatically NA but be aware of data type  Explicit NA type requirement
+Performance              Base R, faster for simple cases             dplyr optimized, safer for large data
+Error Handling           No strict checks                            Strict on data types
+e.g., x <- c(1,2,3,4)
+      ifelse(x>2,"Yes", 0): "0", "0", "Yes", "Yes" ———— 0 converted to character automatically
+      if_else(x>2, "Yes", 0): Error: 'false' must be type <character> ———— won't convert automatically
+
+      x <- c(1,2,NA,4)
+      ifelse(x>2,"Yes", NA): "No", "No", NA, "Yes" ———— preserves NA
+      if_else(x>2, "Yes", NA): Error: 'false' must be type <character> ———— required explicit typing
+      if_else(x>2, "Yes", NA_character_):  "No", "No", NA, "Yes" ———— works because explicitly NA
+
+#### R: as.numeric()
+df$is_adult <- as.numeric(df$age>=18)
+         
+#### R: model.matrix(): transfer factors into multiple dummy variables (1/0)
+df$age_group <- factor(df$age_group)
+dummy_vars <- model.matrix(~ age_group - 1, data=df) # dummy prefix: age_group
+df <- cbind(df, dummy_vars)
