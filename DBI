@@ -1,1 +1,10 @@
+rc=dbConnect(odbc::odbc(), .connection_string = rs_getcstring_okta())
+
 # use compute() at the end of block for execute commands within interaction databased
+
+# cancel the running query from Redshift. Need restart a new r session
+dbGetQuery(rc, "select * from stc_recents") # select all running pid
+dbGetQuery(rc, "cancel pid") # cancel the pid specified in the code
+
+# delete the existing table from the remote database
+dbExecute(rc, "DROP TABLE compute_name_specified"
