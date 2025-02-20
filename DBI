@@ -8,3 +8,10 @@ dbGetQuery(rc, "cancel pid") # cancel the pid specified in the code
 
 # delete the existing table from the remote database
 dbExecute(rc, "DROP TABLE compute_name_specified"
+
+#string matching
+%like% instead of like
+%~% for regex searching
+
+q1 %>% compute(name="query1")
+tbl(rc, "query1")
