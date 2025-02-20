@@ -1,0 +1,15 @@
+# conversion
+## able to replace the original column value and format at database level
+1) character to numeric
+sql("try_cast_numeric(obs_result, 10,3)")
+convert obs_result into numeric type.
+10: total number of digits can be stored. i.e, precision
+3: number of digits to the right of the decimal point. i.e., scale
+10,3 works as input(variable, 10.3)
+
+2) numeric to character
+sql("CAST(numeric_column AS VARCHAR(50))") #change directly on original column if no mutate()
+SELECT cast(num_col as VARCHAR(50)) AS text_col # to create a new column without mutate()
+50: length of the variable
+
+# Use SQL queries in R in upper case is a normal way for scripts writing.
